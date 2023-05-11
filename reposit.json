@@ -1,0 +1,37 @@
+def create_xml(item_count_next):
+    rss_file = open('rss{:.0f}.xml'.format(item_count_next/rows_in_rss), 'w', encoding="utf-8")
+    rss_file.write(
+    """<?xml version="1.0" encoding="UTF-8"?>
+        <rss xmlns:yandex="http://news.yandex.ru"
+            xmlns:media="http://search.yahoo.com/mrss/"
+            xmlns:turbo="http://turbo.yandex.ru"
+            version="2.0">
+            <channel>""")
+    rss_file.close()
+def data_for_rss(item_count_prev, item_count_next):
+    
+    data_rss = data[item_count_prev:item_count_next]
+    
+    if len(data_rss) != 0:
+        
+        with open('rss{:.0f}.xml'.format(item_count_next/rows_in_rss), 'a', encoding="utf-8") as rss_file:
+        
+            for index, row in data_rss.iterrows():
+                
+                url = str(row[0])
+                
+                h1 = str(row[1])
+
+                text = str(row[2])
+                
+                rss_file.write("""<item turbo="true">
+                                        <link>"""+ url + """</link>
+                                        <turbo:content>
+                                        <![CDATA[
+                                            <header> <h1>"""+ h1 +"""</h1> 
+                                            </header>"""
+                                            + text+ 
+                                            """<div data-block="share" data-network="vkontakte,odnoklassniki,facebook,twitter"></div>
+                                            ]]>
+                                            </turbo:content>
+                                    </item>""")
